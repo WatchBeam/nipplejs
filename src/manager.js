@@ -98,7 +98,7 @@ Manager.prototype.onstart = function (evt) {
 
     } else {
 
-        return false;
+        return this.processOnStart(evt[0] || evt);
 
     }
 
@@ -117,7 +117,7 @@ Manager.prototype.processOnStart = function (evt) {
         evt.pointerId) || 0;
 
     if (this.nipples.get(identifier)) {
-        return;
+        return this.nipples.get(identifier).ui.front.classList.remove('squareone');
     }
 
     var scroll = u.getScroll();
@@ -154,6 +154,9 @@ Manager.prototype.processOnStart = function (evt) {
     this.trigger('added ' + identifier + ':added', nipple);
     nipple.trigger('start', nipple);
     this.trigger('start ' + identifier + ':start', nipple);
+
+    // First time is fake, just unregister right away
+    this.onend(evt);        
 };
 
 Manager.prototype.onmove = function (evt) {
@@ -242,11 +245,9 @@ Manager.prototype.onend = function (evt) {
         this.processOnEnd(evt[0] || evt);
     }
 
-    if (!this.nipples.length) {
-        this.unbindEvt(document, 'move')
-            .unbindEvt(document, 'end');
-        this.started = false;
-    }
+    this.unbindEvt(document, 'move')
+        .unbindEvt(document, 'end');
+    this.started = false;
 
     return false;
 };
@@ -269,6 +270,10 @@ Manager.prototype.processOnEnd = function (evt) {
     });
     nipple.trigger('end', nipple);
     self.trigger('end ' + identifier + ':end', nipple);
-    var index = self.nipples.indexOf(nipple);
-    self.nipples.splice(index, 1);
+    var scroll = u.getScroll();
+    var frontPosition = {
+        x: this.nippleOptions.size / 4,
+        y: this.nippleOptions.size / 4
+    };
+    nipple.ui.front.classList.add('squareone');
 };

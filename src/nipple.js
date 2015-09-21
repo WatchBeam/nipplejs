@@ -166,19 +166,19 @@ Nipple.prototype.show = function (cb) {
 Nipple.prototype.hide = function (cb) {
     var self = this;
 
-    self.ui.el.style.opacity = 0;
+    // self.ui.el.style.opacity = 0;
     clearTimeout(self.removeTimeout);
     clearTimeout(self.showTimeout);
 
     self.removeTimeout = setTimeout(
         function () {
-            self.ui.el.style.display = 'none';
+            // self.ui.el.style.display = 'none';
             if (typeof cb === 'function') {
                 cb.call(this);
             }
-            self.trigger('hidden', self);
-            self.manager.trigger('hidden ' + self.identifier + ':hidden', self);
-            self.removeFromDom();
+            // self.trigger('hidden', self);
+            // self.manager.trigger('hidden ' + self.identifier + ':hidden', self);
+            // self.removeFromDom();
         },
         self.options.fadeTime
     );

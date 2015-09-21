@@ -338,19 +338,19 @@ Nipple.prototype.show = function (cb) {
 Nipple.prototype.hide = function (cb) {
     var self = this;
 
-    self.ui.el.style.opacity = 0;
+    // self.ui.el.style.opacity = 0;
     clearTimeout(self.removeTimeout);
     clearTimeout(self.showTimeout);
 
     self.removeTimeout = setTimeout(
         function () {
-            self.ui.el.style.display = 'none';
+            // self.ui.el.style.display = 'none';
             if (typeof cb === 'function') {
                 cb.call(this);
             }
-            self.trigger('hidden', self);
-            self.manager.trigger('hidden ' + self.identifier + ':hidden', self);
-            self.removeFromDom();
+            // self.trigger('hidden', self);
+            // self.manager.trigger('hidden ' + self.identifier + ':hidden', self);
+            // self.removeFromDom();
         },
         self.options.fadeTime
     );
@@ -534,6 +534,7 @@ Manager.prototype.unbindEvt = function (el, type) {
 };
 
 Manager.prototype.onstart = function (evt) {
+    console.log(evt)
     evt = u.prepareEvent(evt);
 
     this.box = this.options.zone.getBoundingClientRect();
@@ -552,7 +553,7 @@ Manager.prototype.onstart = function (evt) {
 
     } else {
 
-        return false;
+        this.processOnStart(evt[0] || evt);
 
     }
 
@@ -571,6 +572,7 @@ Manager.prototype.processOnStart = function (evt) {
         evt.pointerId) || 0;
 
     if (this.nipples.get(identifier)) {
+        this.nipples.get(identifier).ui.front.classList.remove('squareone');
         return;
     }
 
@@ -608,6 +610,9 @@ Manager.prototype.processOnStart = function (evt) {
     this.trigger('added ' + identifier + ':added', nipple);
     nipple.trigger('start', nipple);
     this.trigger('start ' + identifier + ':start', nipple);
+
+    // First time is fake, just unregister right away
+    this.onend(evt);
 };
 
 Manager.prototype.onmove = function (evt) {
@@ -686,6 +691,8 @@ Manager.prototype.processOnMove = function (evt) {
 };
 
 Manager.prototype.onend = function (evt) {
+    console.log(evt)
+
     evt = u.prepareEvent(evt);
 
     if (evt.length && this.options.multitouch) {
@@ -696,11 +703,10 @@ Manager.prototype.onend = function (evt) {
         this.processOnEnd(evt[0] || evt);
     }
 
-    if (!this.nipples.length) {
-        this.unbindEvt(document, 'move')
-            .unbindEvt(document, 'end');
-        this.started = false;
-    }
+    this.unbindEvt(document, 'move')
+        .unbindEvt(document, 'end');
+    this.started = false;
+
 
     return false;
 };
@@ -723,8 +729,14 @@ Manager.prototype.processOnEnd = function (evt) {
     });
     nipple.trigger('end', nipple);
     self.trigger('end ' + identifier + ':end', nipple);
-    var index = self.nipples.indexOf(nipple);
-    self.nipples.splice(index, 1);
+    
+    var scroll = u.getScroll();
+    var frontPosition = {
+        x: this.nippleOptions.size / 4,
+        y: this.nippleOptions.size / 4
+    };
+    nipple.ui.front.classList.add('squareone');
+
 };
 return {
     create: function (options) {
