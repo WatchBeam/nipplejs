@@ -9,6 +9,7 @@ var Manager = function (options) {
     self.bindEvt(self.options.zone, 'start');
 
     self.nipples.on = self.on.bind(self);
+    self.nipples.onstart = self.onstart.bind(self);
     self.nipples.processOnStart = self.processOnStart.bind(self);
     self.nipples.off = self.off.bind(self);
     self.nipples.options = self.options;
