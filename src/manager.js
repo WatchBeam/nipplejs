@@ -117,7 +117,8 @@ Manager.prototype.processOnStart = function (evt) {
         evt.pointerId) || 0;
 
     if (this.nipples.get(identifier)) {
-        return this.nipples.get(identifier).ui.front.classList.remove('squareone');
+        return this.nipples.get(identifier)
+            .ui.front.classList.remove('squareone');
     }
 
     var scroll = u.getScroll();
@@ -156,7 +157,7 @@ Manager.prototype.processOnStart = function (evt) {
     this.trigger('start ' + identifier + ':start', nipple);
 
     // First time is fake, just unregister right away
-    this.onend(evt);        
+    this.onend(evt);
 };
 
 Manager.prototype.onmove = function (evt) {

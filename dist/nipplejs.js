@@ -534,7 +534,6 @@ Manager.prototype.unbindEvt = function (el, type) {
 };
 
 Manager.prototype.onstart = function (evt) {
-    console.log(evt)
     evt = u.prepareEvent(evt);
 
     this.box = this.options.zone.getBoundingClientRect();
@@ -553,7 +552,7 @@ Manager.prototype.onstart = function (evt) {
 
     } else {
 
-        this.processOnStart(evt[0] || evt);
+        return this.processOnStart(evt[0] || evt);
 
     }
 
@@ -572,8 +571,8 @@ Manager.prototype.processOnStart = function (evt) {
         evt.pointerId) || 0;
 
     if (this.nipples.get(identifier)) {
-        this.nipples.get(identifier).ui.front.classList.remove('squareone');
-        return;
+        return this.nipples.get(identifier)
+            .ui.front.classList.remove('squareone');
     }
 
     var scroll = u.getScroll();
@@ -691,8 +690,6 @@ Manager.prototype.processOnMove = function (evt) {
 };
 
 Manager.prototype.onend = function (evt) {
-    console.log(evt)
-
     evt = u.prepareEvent(evt);
 
     if (evt.length && this.options.multitouch) {
@@ -706,7 +703,6 @@ Manager.prototype.onend = function (evt) {
     this.unbindEvt(document, 'move')
         .unbindEvt(document, 'end');
     this.started = false;
-
 
     return false;
 };
@@ -729,14 +725,12 @@ Manager.prototype.processOnEnd = function (evt) {
     });
     nipple.trigger('end', nipple);
     self.trigger('end ' + identifier + ':end', nipple);
-    
     var scroll = u.getScroll();
     var frontPosition = {
         x: this.nippleOptions.size / 4,
         y: this.nippleOptions.size / 4
     };
     nipple.ui.front.classList.add('squareone');
-
 };
 return {
     create: function (options) {
