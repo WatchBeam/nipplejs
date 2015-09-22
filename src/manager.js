@@ -98,7 +98,7 @@ Manager.prototype.onstart = function (evt) {
 
     } else {
 
-        return this.processOnStart(evt[0] || evt);
+        this.processOnStart(evt[0] || evt);
 
     }
 
@@ -189,12 +189,16 @@ Manager.prototype.processOnMove = function (evt) {
 
     // Make sure that the nipple is still in the right spot
     var container = this.options.zone.getBoundingClientRect();
-    if (this.box.left !== container.left && this.box.top !== container.top) {
+    var nippleCenter = {
+        x: this.box.left + (this.box.width / 2),
+        y: this.box.top + (this.box.height / 2)
+    };
+    if (nippleCenter.x !== nipple.x && nippleCenter.y !== nipple.y) {
         this.box = container;
         var scroll = u.getScroll();
         var position = {
-            x: evt.pageX,
-            y: evt.pageY
+            x: nippleCenter.x,
+            y: nippleCenter.y
         };
         var backPosition = {
             x: position.x -
