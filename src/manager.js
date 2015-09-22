@@ -187,6 +187,25 @@ Manager.prototype.processOnMove = function (evt) {
         return;
     }
 
+    // Make sure that the nipple is still in the right spot
+    var container = this.options.zone.getBoundingClientRect();
+    if (this.box.left !== container.left && this.box.top !== container.top) {
+        this.box = container;
+        var scroll = u.getScroll();
+        var position = {
+            x: evt.pageX,
+            y: evt.pageY
+        };
+        var backPosition = {
+            x: position.x -
+                (scroll.x + this.box.left + this.nippleOptions.size / 2),
+            y: position.y -
+                (scroll.y + this.box.top + this.nippleOptions.size / 2)
+        };
+        nipple.position = position;
+        nipple.backPosition = backPosition;
+    }
+
     var size = nipple.options.size / 2;
     var pos = {
         x: evt.pageX,
